@@ -62,17 +62,19 @@ function App() {
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
       }}
     >
+      <h2>New years "todo" list</h2>
       <Card
         style={{
           width: "auto",
           border: "2px solid black",
           borderRadius: "10px",
-          backgroundColor: "white",
+          backgroundColor: "#DCDCDC",
         }}
       >
         <Card.Header
@@ -80,13 +82,13 @@ function App() {
             color: "#fff",
             textAlign: "center",
             backgroundColor: "purple",
-            paddingBottom: "10px",
+            padding: "10px 0 10px 0",
             borderRadius: "8px 8px 0 0",
           }}
         >
           Tasks
         </Card.Header>
-        <ListGroup variant="flush">
+        <ListGroup variant="flush" style={{ padding: "4px" }}>
           {tasks.map((task, index) => (
             <ListGroup.Item
               key={index}
@@ -103,13 +105,16 @@ function App() {
                 type="submit"
                 variant="danger"
                 onClick={() => handleDeleteTask(task.task)}
-              >
-                <img
-                  src="/trash.png"
-                  alt="trashImage"
-                  style={{ width: "13px" }}
-                />
-              </Button>
+                style={{
+                  padding: 0,
+                  border: "none",
+                  background: `url('/trash.png') no-repeat center center`,
+                  backgroundSize: "cover",
+                  width: "20px",
+                  height: "20px",
+                  borderRadius: "20%",
+                }}
+              />
             </ListGroup.Item>
           ))}
           <ListGroup.Item style={{ padding: "3px" }}>
@@ -118,16 +123,21 @@ function App() {
                 size="sm"
                 className="mb-3"
                 onChange={(e) => setText(e.target.value)}
+                style={{ display: "flex", justifyContent: "space-between" }}
               >
                 <Form.Control
                   name="task"
                   aria-label="Small"
                   aria-describedby="inputGroup-sizing-sm"
-                  style={{ borderRadius: "5px" }}
+                  style={{ borderRadius: "5px", border: "2px", width: "70%" }}
                   value={text}
                 />
-                <Button type="submit" variant="secondary">
-                  Add
+                <Button
+                  type="submit"
+                  variant="outline-light"
+                  style={{ borderRadius: "50%", border: "1px solid black" }}
+                >
+                  +
                 </Button>
               </InputGroup>
             </Form>
