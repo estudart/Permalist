@@ -10,6 +10,7 @@ import axios from "axios";
 function App() {
   const [tasks, setTasks] = useState([]);
   const [text, setText] = useState("");
+  const [edit, setEdit] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +59,25 @@ function App() {
     }
   }
 
+  async function handleEditTask(inputTask) {
+    try {
+      console.log(inputTask);
+      await axios.delete("http://127.0.0.1:5000/edit", { task: inputTask });
+      const response = await axios.get("http://127.0.0.1:5000/");
+      setTasks(response.data);
+      setText("");
+    } catch (error) {
+      console.error("Error handling delete task");
+    }
+  }
+
+  const handleEdit = (index) => {
+    setEdit((prevEdit) => {
+      // Toggle the edit state for the specific task index
+      return { ...prevEdit, [index]: !prevEdit[index] };
+    });
+  };
+
   return (
     <div
       style={{
@@ -96,11 +116,57 @@ function App() {
                 borderBottom: "1px solid black",
                 padding: "3px",
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                justifyContent: "space-between", // Align items horizontally
               }}
             >
-              <span>{task.task}</span>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Button
+                  type="submit"
+                  variant="danger"
+                  edit={edit}
+                  onClick={() => handleEdit(index)}
+                  style={{
+                    padding: 0,
+                    border: "none",
+                    background: `url('/edit.png') no-repeat center center`,
+                    backgroundSize: "cover",
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "20%",
+                  }}
+                />
+                {!edit[index] ? (
+                  <span style={{ marginLeft: "8px" }}>{task.task}</span>
+                ) : (
+                  <span>
+                    <Form
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleEditTask(text, text.task);
+                        }
+                      }}
+                    >
+                      <InputGroup
+                        size="sm"
+                        className="mb-3"
+                        onChange={(e) => setText(e.target.value)}
+                      >
+                        <Form.Control
+                          name="task"
+                          aria-label="Small"
+                          aria-describedby="inputGroup-sizing-sm"
+                          style={{
+                            borderRadius: "5px",
+                            border: "2px",
+                            margin: "2px",
+                          }}
+                          value={text}
+                        />
+                      </InputGroup>
+                    </Form>
+                  </span>
+                )}
+              </div>
               <Button
                 type="submit"
                 variant="danger"
